@@ -8,24 +8,9 @@ import { GoogleGenAI, Modality } from "@google/genai";
 const getAi = () => new GoogleGenAI({ apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY });
 
 function handleGeminiError(error: any, context: string): never {
-  const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error));
-  const isPrepayment = errorMessage.includes("prepayment credits are depleted") || errorMessage.includes("prepay");
-  const isQuota = error?.status === 429 || errorMessage.includes("429") || errorMessage.includes("RESOURCE_EXHAUSTED");
-  const isAuth = error?.status === 403 || errorMessage.includes("403") || errorMessage.includes("PERMISSION_DENIED");
-
-  if (!isPrepayment && !isQuota && !isAuth) {
-    console.error(`${context} Error:`, error);
-  }
+  console.error(`${context} Error:`, error);
   
-  if (isPrepayment) {
-    throw new Error("Prepayment credits depleted: Your AI Studio account has no credits left. Please check your billing at https://ai.studio/.");
-  }
-
-  if (isQuota) {
-    throw new Error(`${context} Quota Exceeded (429): Gemini rate limit reached or quota exhausted. Please wait a moment or check your AI Studio project usage.`);
-  }
-
-  if (error?.status === 403 || errorMessage.includes("403") || errorMessage.includes("PERMISSION_DENIED")) {
+  if (error?.status === 403 || error?.message?.includes("403") || error?.message?.includes("PERMISSION_DENIED")) {
     throw new Error("API Key Permission Denied (403): Please check your API key in settings and ensure it has access to the required models.");
   }
   
