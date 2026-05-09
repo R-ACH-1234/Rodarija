@@ -1,0 +1,8 @@
+{
+  "name": "DarijaVlog AI",
+  "description": "Transform text or voice input into authentic, high-energy Moroccan YouTuber audio with AI. Real Darija, natural fillers, and vlog-style delivery.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": []
+}
